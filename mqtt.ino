@@ -1,3 +1,15 @@
+
+// // Your GPRS credentials, if any
+// const char apn[]      = "M2MINTERNET";
+// const char gprsUser[] = "dimasnyoman1@gmail.com";
+// const char gprsPass[] = "IOT888888";
+
+// // MQTT details
+// const char* broker = "35.219.74.221";
+// const char* topicLed       = "client/position";
+// const char* topicInit      = "client/status";
+// const char* topicLedStatus = "client/ledStatus";
+
 /**************************************************************
  *
  * For this example, you need to install PubSubClient library:
@@ -24,10 +36,30 @@
 
 // Select your modem:
 // #define TINY_GSM_MODEM_SIM800
+// #define TINY_GSM_MODEM_SIM808
+// #define TINY_GSM_MODEM_SIM868
 #define TINY_GSM_MODEM_SIM900
+// #define TINY_GSM_MODEM_SIM7000
+// #define TINY_GSM_MODEM_SIM7000SSL
+// #define TINY_GSM_MODEM_SIM7080
+// #define TINY_GSM_MODEM_SIM5360
+// #define TINY_GSM_MODEM_SIM7600
+// #define TINY_GSM_MODEM_A7672X
 // #define TINY_GSM_MODEM_UBLOX
+// #define TINY_GSM_MODEM_SARAR4
+// #define TINY_GSM_MODEM_SARAR5
+// #define TINY_GSM_MODEM_M95
+// #define TINY_GSM_MODEM_BG95
+// #define TINY_GSM_MODEM_BG96
+// #define TINY_GSM_MODEM_A6
+// #define TINY_GSM_MODEM_A7
+// #define TINY_GSM_MODEM_M590
+// #define TINY_GSM_MODEM_MC60
+// #define TINY_GSM_MODEM_MC60E
 // #define TINY_GSM_MODEM_ESP8266
 // #define TINY_GSM_MODEM_ESP32
+// #define TINY_GSM_MODEM_XBEE
+// #define TINY_GSM_MODEM_SEQUANS_MONARCH
 
 // Set serial for debug console (to the Serial Monitor, default speed 115200)
 #define SerialMon Serial
@@ -73,15 +105,14 @@ const char gprsUser[] = "dimasnyoman1@gmail.com";
 const char gprsPass[] = "IOT888888";
 
 // Your WiFi connection credentials, if applicable
-const char wifiSSID[] = "";
-const char wifiPass[] = "";
+const char wifiSSID[] = "YourSSID";
+const char wifiPass[] = "YourWiFiPass";
 
 // MQTT details
 const char* broker = "35.219.74.221";
-
-const char* topicLed       = "client/position";
+const char* topicLed       = "client/status";
 const char* topicInit      = "client/status";
-const char* topicLedStatus = "client/ledStatus";
+const char* topicLedStatus = "client/status";
 
 #include <TinyGsmClient.h>
 #include <PubSubClient.h>
@@ -135,7 +166,7 @@ boolean mqttConnect() {
   SerialMon.print(broker);
 
   // Connect to MQTT Broker
-  boolean status = mqtt.connect("GsmClientTest");
+  boolean status = mqtt.connect("IOT Test");
 
   // Or, if you want to authenticate MQTT:
   // boolean status = mqtt.connect("GsmClientName", "mqtt_user", "mqtt_pass");
@@ -145,7 +176,7 @@ boolean mqttConnect() {
     return false;
   }
   SerialMon.println(" success 1");
-  mqtt.publish(topicInit, "GsmClientTest started");
+  mqtt.publish(topicInit, "{\"status\":\"true\", \"device_id\":\"iot-client-1\"}");
   mqtt.subscribe(topicLed);
   return mqtt.connected();
 }
@@ -192,7 +223,7 @@ void setup() {
     delay(10000);
     return;
   }
-  SerialMon.println(" success 2");
+  SerialMon.println(" success");
 #endif
 
 #if TINY_GSM_USE_GPRS && defined TINY_GSM_MODEM_XBEE
@@ -206,7 +237,7 @@ void setup() {
     delay(10000);
     return;
   }
-  SerialMon.println(" success 3");
+  SerialMon.println(" success");
 
   if (modem.isNetworkConnected()) { SerialMon.println("Network connected"); }
 
@@ -219,7 +250,7 @@ void setup() {
     delay(10000);
     return;
   }
-  SerialMon.println(" success 4");
+  SerialMon.println(" success");
 
   if (modem.isGprsConnected()) { SerialMon.println("GPRS connected"); }
 #endif
